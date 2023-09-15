@@ -9,6 +9,13 @@ Cette documentation permet d'exécuter un code qui va surveiller les prix sur [B
 sudo apt install python3
 ```
 
+## Télécharger le code source
+
+```code
+git clone https://github.com/kenza12/formation.git
+cd formation/projet2
+```
+
 ## Créer un environnement virtuel nommé env
 
 ```code
