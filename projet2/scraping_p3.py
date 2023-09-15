@@ -88,7 +88,7 @@ def scrape_all_category_books(base_url, results_folder_3, download_images=True):
     response = requests.get(base_url)
 
     if response.status_code == 200:
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.content, 'html.parser')
 
         # Trouver tous les liens de catégories de livres dans le menu de navigation
         category_links = soup.find('ul', class_='nav').findAll('a')

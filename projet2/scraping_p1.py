@@ -35,7 +35,7 @@ def extract_product_info(url):
 
     # Utiliser requests pour obtenir le contenu HTML de la page
     response = requests.get(url)
-    page = response.text
+    page = response.content
 
     # Vérifier si la requête s'est correctement déroulée
     if response.status_code == 200:
@@ -48,8 +48,8 @@ def extract_product_info(url):
         product_page_url = str(url)
         universal_product_code = tds[0].string
         title=soup.h1.text
-        price_including_tax = tds[3].string.encode('latin-1').decode('utf-8')
-        price_excluding_tax = tds[2].string.encode('latin-1').decode('utf-8')
+        price_including_tax = tds[3].string
+        price_excluding_tax = tds[2].string
         number_available = int(re.search(r'\d+', tds[5].string).group())
         product_description = soup.find("meta", {"name": "description"}).get("content").strip()
         category = soup.find("ul", class_="breadcrumb").find_all("li")[-2].find("a").text
@@ -72,6 +72,7 @@ def extract_product_info(url):
             'image_url': image_url
         }
         return product_data
+    
     else:
         print("La requête a échoué avec le code :", response.status_code)
         return None
@@ -93,7 +94,7 @@ def main():
     # Vérifier si les données ont été extraites avec succès
     if product_data:
         # Ecrire les données dans un fichier CSV
-        with open('book_data.csv', 'w', newline='') as csvfile:
+        with open('book_data.csv', 'w', newline='', encoding='utf-8') as csvfile:
             fieldnames = product_data.keys()
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

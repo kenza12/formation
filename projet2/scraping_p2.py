@@ -43,7 +43,7 @@ def scrape_category_books(category_url):
         response = requests.get(category_url)
 
         if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.content, 'html.parser')
 
             h3_elements = soup.findAll('h3')
             for h3_element in h3_elements:
