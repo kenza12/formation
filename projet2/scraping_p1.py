@@ -23,7 +23,7 @@ Date : 07/09/2023
         product_data.csv : fichier CSV contenant les informations du bouquin: product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url
 """
 
-def extract_product_info(url):
+def extract_product_info(url: str) -> dict:
     """_summary_ : Fonction pour extraire les informations d'une page d'un bouquin
 
     Args:

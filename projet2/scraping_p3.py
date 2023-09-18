@@ -37,7 +37,7 @@ results_folder_3 = "results_p3"
 results_folder_4= "results_p4"
 
 
-async def download_image(session, image_url, image_path):
+async def download_image(session: aiohttp.ClientSession, image_url: str, image_path: str) -> None:
     """_summary_:  Télécharge et enregistre une image depuis une URL.
 
     Args:
@@ -53,7 +53,7 @@ async def download_image(session, image_url, image_path):
         else:
             print(f"Échec du téléchargement de l'image {image_path} depuis {image_url}")
 
-async def download_product_images_async(data, category_name):
+async def download_product_images_async(data: list[dict], category_name: str) -> None:
     """_summary_ : Télécharge et enregistre les images des produits de la catégorie donnée.
 
     Args:
@@ -75,7 +75,7 @@ async def download_product_images_async(data, category_name):
         await asyncio.gather(*tasks)
 
 
-def scrape_all_category_books(base_url, results_folder_3, download_images=True):
+def scrape_all_category_books(base_url: str, results_folder_3: str, download_images: bool = True) -> None:
     """_summary_ : Extrait les données de livres de toutes les catégories du site web.
 
     Args:

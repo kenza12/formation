@@ -28,14 +28,14 @@ Date : 07/09/2023
 # URL de la page de catégorie de livres
 base_url = "http://books.toscrape.com/catalogue/category/books/mystery_3/page-1.html"
 
-def scrape_category_books(category_url):
+def scrape_category_books(category_url: str) -> list[dict]:
     """_summary_ : fonction qui va parcourir plusieurs pages de bouquins d'une catégorie d'ouvrage afin de récupérer certaines informations.
 
     Args:
         category_url (_type_): URL de la page web de la catégorie spécifiée
 
     Returns:
-        _list_: Une liste de dictionnaire qui contient les informations de tous les livres d'une catégorie donnée.
+        _list[dict]_: Une liste de dictionnaire qui contient les informations de tous les livres d'une catégorie donnée.
     """
 
     all_books_data = []
