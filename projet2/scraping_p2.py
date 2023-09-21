@@ -59,8 +59,6 @@ def scrape_category_books(category_url: str) -> list[dict]:
                 if next_page_link:
                     next_page_url = os.path.join(os.path.split(category_url)[0], next_page_link['href'])
                     category_url = next_page_url
-                else:
-                    break  # Il n'y a plus de pages à parcourir
             else:
                 break  # Il n'y a plus de pages à parcourir
         else:
