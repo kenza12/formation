@@ -37,13 +37,21 @@ def extract_product_info(url: str) -> dict:
     response = requests.get(url)
     page = response.content
 
+    # Mapping des valeurs textuelles aux chiffres
+    rating_mapping = {
+        'One': 1,
+        'Two': 2,
+        'Three': 3,
+        'Four': 4,
+        'Five': 5
+    }
+
     # Vérifier si la requête s'est correctement déroulée
     if response.status_code == 200:
         # Créez un objet BeautifulSoup à partir du contenu HTML
         soup = BeautifulSoup(page, 'html.parser')
 
         # Extraire les informations requises
-        #tds = extract_data(soup.findAll('td'))
         tds=soup.findAll('td')
         product_page_url = str(url)
         universal_product_code = tds[0].string
@@ -54,7 +62,8 @@ def extract_product_info(url: str) -> dict:
         product_description = soup.find("meta", {"name": "description"}).get("content").strip()
         category = soup.find("ul", class_="breadcrumb").find_all("li")[-2].find("a").text
         #review_rating = soup.select_one('p.star-rating')['class'][1]
-        review_rating = soup.find('p', class_='star-rating')['class'][1]
+        review_class = soup.find('p', class_='star-rating')['class'][1]
+        review_rating = rating_mapping.get(review_class, None)
         image_url=soup.find('article', class_='product_page').find("div").find("img").get("src")
         image_url = url.rsplit('/', 2)[0] + '/' + image_url
         
