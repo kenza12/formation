@@ -1,63 +1,102 @@
 from datetime import datetime
-from models.tournament import Tournament
+from models.match import Match
 
 
 class Round:
-    def __init__(self, name: str, start_time: datetime = None, end_time: datetime = None, matches: list[tuple[list[str], list[float]]] = None):
-        """
-        Initialize a Round instance.
+    """
+    Represents a round in a tournament with multiple matches.
+    
+    Attributes:
+        name (str): Name of the round.
+        start_time (datetime): Timestamp indicating when the round starts.
+        end_time (datetime or None): Timestamp indicating when the round ends. None if the round hasn't ended yet.
+        matches (list[Match]): List of matches in this round.
+    """
 
-        :param name: The name or identifier of the round.
-        :param start_time: The date and time when the round starts (default is None).
-        :param end_time: The date and time when the round ends (default is None).
-        :param matches: A list to store the matches for the round (default is an empty list).
+    def __init__(self, name: str) -> None:
+        """
+        Initializes a Round instance.
+
+        Args:
+            name (str): Name of the round.
         """
         self.name = name
-        self.start_time = start_time  # Date and time when the round starts
-        self.end_time = end_time  # Date and time when the round ends
-        self.matches = matches or []  # A list to store the matches for the round
+        # Set the start time to the current time
+        self.start_time = None
+        self.end_time = None
+        self.matches = []
 
     def __str__(self) -> str:
-        """
-        Return a string representation of the Round instance.
+        """ 
+        Returns the string representation of the round.
 
-        :return: A string describing the round, including its name, the number of matches, start time, and end time.
+        Returns:
+            str: String displaying the round's details.
         """
-        return f"Round {self.name} - Matches: {len(self.matches)} - Start Time: {self.start_time} - End Time: {self.end_time}"
+        start_time_str = self.start_time.strftime('%Y-%m-%d %H:%M:%S') if self.start_time else "N/A"
+        end_time_str = self.end_time.strftime('%Y-%m-%d %H:%M:%S') if self.end_time else "N/A"
+        return f"Round {self.name} - Matches: {len(self.matches)} - Start Time: {start_time_str} - End Time: {end_time_str}"
 
-    def generate_round_name(self, tournament: Tournament) -> str:
-        """
-        Generate the name of the round based on the round number of the parent tournament.
 
-        :param tournament: The Tournament instance to which this round belongs.
-        :return: The name of the round, e.g., "Round 1", "Round 2", etc.
+    @property
+    def is_finished(self) -> bool:
         """
-        round_number = tournament.round_number
-        return f"Round {round_number}"
+        Checks if all matches in the round have ended.
 
-    def start_round(self):
+        Returns:
+            bool: True if all matches have ended, False otherwise.
         """
-        Start the round and set the start time to the current date and time.
+        return all(match.is_finished for match in self.matches)
+
+    def start_round(self) -> None:
         """
+        Marks the start time of the round.
+        """
+        # Update the start time to the current time
         self.start_time = datetime.now()
 
-    def end_round(self):
+    def end_round(self) -> None:
         """
-        End the round and set the end time to the current date and time.
+        Marks the end time of the round.
         """
+        # Update the end time to the current time
         self.end_time = datetime.now()
 
-    def add_match(self, players: list[str], scores: list[float]):
+    def add_match(self, match: Match) -> None:
         """
-        Add a match to the round.
+        Adds a match to the round.
 
-        :param players: A list of two players participating in the match.
-        :param scores: A list of two scores corresponding to the players.
-        :raises ValueError: If the length of the players or scores lists is not exactly 2.
+        Args:
+            match (Match): The match to be added.
         """
-        if len(players) != 2 or len(scores) != 2:
-            raise ValueError("A match should have exactly 2 players and 2 scores.")
-        match = (players, scores)
         self.matches.append(match)
 
+    def to_dict(self) -> dict:
+        """
+        Converts the round object to a dictionary.
 
+        Returns:
+            dict: A dictionary representation of the round.
+        """
+        return {
+            "name": self.name,
+            "matches": [match.to_dict() for match in self.matches],
+            "is_finished": self.is_finished
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Round':
+        """
+        Creates a round instance from a dictionary representation.
+
+        Args:
+            data (dict): The dictionary containing round data.
+
+        Returns:
+            Round: A Round object created from the dictionary data.
+        """
+        round_instance = cls(data["name"])
+        for match_data in data.get("matches", []):
+            match = Match.from_dict(match_data)
+            round_instance.matches.append(match)
+        return round_instance
