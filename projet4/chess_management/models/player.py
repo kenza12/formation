@@ -25,7 +25,7 @@ class Player:
         Returns:
             str: A string displaying the player's full details.
         """
-        return f"{self.first_name} {self.last_name} (Chess ID: {self.chess_id}, Birthdate: {self.birthdate})"
+        return f"{self.last_name} {self.first_name} (Chess ID: {self.chess_id}, Birthdate: {self.birthdate})"
 
     def get_full_name(self) -> str:
         """

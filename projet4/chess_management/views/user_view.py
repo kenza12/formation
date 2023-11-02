@@ -75,7 +75,7 @@ class UserView:
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack(pady=10)
 
     def display_player_list(self) -> None:
-        """Display the list of players in the active tournament."""
+        """Display the list of players in the active tournament, sorted alphabetically."""
         if not self.controller.tournament_manager.tournament:
             print("No ongoing tournament. Please create one before listing players.")
             return
@@ -88,22 +88,14 @@ class UserView:
         player_text = tk.Text(self.list_window, wrap=tk.WORD, width=50, height=10)
         player_text.pack(padx=10, pady=10)
 
-        for player in self.controller.tournament_manager.tournament.players:
+        # Get the list of players and sort it alphabetically
+        sorted_players = sorted(self.controller.tournament_manager.tournament.players, 
+                                key=lambda player: player.last_name)
+
+        for player in sorted_players:
             player_details = str(player)
             player_text.insert(tk.END, player_details + "\n\n")
 
         # Button to close the window
         close_button = tk.Button(self.list_window, text="Close", command=self.list_window.destroy)
         close_button.pack(pady=10)
-
-    def display_players(self, players: list) -> None:
-        """Display the list of players in a tkinter window."""
-        window = tk.Toplevel(self.master)
-        window.title("Players")
-
-        for i, player in enumerate(players):
-            label_text = str(player)
-            label = tk.Label(window, text=label_text)
-            label.grid(row=i, column=0, sticky="w", padx=10, pady=5)
-
-        window.mainloop()

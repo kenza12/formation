@@ -70,6 +70,14 @@ class TournamentView:
         tk.Button(self.submenu_window, text="View Tournament Details", command=self.display_tournament_details).pack()
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
 
+    def display_reports_submenu(self) -> None:
+        """Display the submenu for reports"""
+        self.submenu_window = tk.Toplevel(self.controller.root)
+        self.submenu_window.title("Reports")
+
+        tk.Button(self.submenu_window, text="List of players in the active tournament", command=self.controller.user_manager.display_player_list).pack()
+        tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
+
     def modify_tournament(self) -> None:
         """Modify an existing tournament. (Functionality not yet implemented)"""
         pass

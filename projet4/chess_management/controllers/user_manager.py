@@ -45,3 +45,7 @@ class UserManager:
         else:  # In case of a tie
             self.controller.tournament_manager.tournament.add_points(match.player1, 0.5)
             self.controller.tournament_manager.tournament.add_points(match.player2, 0.5)
+    
+    def display_player_list(self) -> None:
+        """Displays player lists from the current tournament"""
+        self.user_view.display_player_list()

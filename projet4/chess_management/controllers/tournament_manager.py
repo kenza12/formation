@@ -98,9 +98,6 @@ class TournamentManager:
         else:
             self.update_round_with_view()
 
-    def display_all_players(self) -> None:
-        """Displays the list of players in the current tournament."""
-        if not self.tournament:
-            print("No ongoing tournament. Please create one before listing the players.")
-            return
-        self.controller.menu_manager.user_view.display_players(self.tournament.players)
+    def display_reports_submenu(self) -> None:
+        """Displays the reports submenu."""
+        self.controller.menu_manager.tournament_view.display_reports_submenu()
