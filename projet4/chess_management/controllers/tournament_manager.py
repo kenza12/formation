@@ -1,4 +1,6 @@
 from models.tournament import Tournament
+from utils.load_data import load_state
+import os
 
 
 class TournamentManager:
@@ -76,7 +78,6 @@ class TournamentManager:
             else:
                 print("Tournament paused.")
 
-
     def resume_tournament(self) -> None:
         """Resumes a paused or a saved tournament."""
         if not self.tournament:
@@ -101,3 +102,22 @@ class TournamentManager:
     def display_reports_submenu(self) -> None:
         """Displays the reports submenu."""
         self.controller.menu_manager.tournament_view.display_reports_submenu()
+
+    def display_all_tournaments(self) -> None:
+        """Fetch and display details of all tournaments in a single window."""
+        # Récupérer tous les tournois
+        tournaments = []
+        tournaments_files = os.listdir("data/tournaments")
+        for file_name in tournaments_files:
+            if file_name.endswith('.json'):
+                tournament = load_state(file_name)
+                if tournament:
+                    tournaments.append(tournament)
+                else:
+                    print(f"Failed to load tournament from {file_name}")
+
+        # Afficher tous les tournois si la liste n'est pas vide
+        if tournaments:
+            self.controller.menu_manager.tournament_view.display_all_tournament_details(tournaments)
+        else:
+            print("Error", "No tournaments to display.")

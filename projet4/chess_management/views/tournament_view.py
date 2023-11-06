@@ -78,6 +78,7 @@ class TournamentView:
         tk.Button(self.submenu_window, text="List of all players in all tournaments", command=self.controller.user_manager.display_all_player_list).pack()
         tk.Button(self.submenu_window, text="List of players in the active tournament", command=self.controller.user_manager.display_player_list).pack()
         tk.Button(self.submenu_window, text="View active tournament details", command=self.display_tournament_details).pack()
+        tk.Button(self.submenu_window, text="View all tournaments details", command=self.controller.tournament_manager.display_all_tournaments).pack()
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
 
     def modify_tournament(self) -> None:
@@ -282,3 +283,38 @@ class TournamentView:
         """Handle the 'No' command for not proceeding to the next round."""
         self.next_round_result = False
         self.next_round_window.destroy()
+
+    def display_all_tournament_details(self, tournaments) -> None:
+        """Display the details of all tournaments in a single window."""
+        # Créer une fenêtre pour afficher les détails
+        all_details_window = tk.Toplevel(self.controller.root)
+        all_details_window.title("All Tournaments Details")
+
+        # Créer un widget Text pour l'affichage structuré
+        details_text = tk.Text(all_details_window, wrap=tk.NONE, font=("Helvetica", 11))
+        details_text.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+        # Configurer le style en gras pour les titres
+        details_text.tag_configure("bold", font=("Helvetica", 11, "bold"))
+
+        # Insérer les détails de chaque tournoi dans le widget Text
+        for tournament in tournaments:
+            details_entries = [
+                ("Name:", tournament.name),
+                ("Location:", tournament.location),
+                ("Start Date:", tournament.start_date),
+                ("End Date:", tournament.end_date),
+                ("Description:", tournament.description),
+                ("Number of Rounds:", str(tournament.round_number)),
+                ("-"*40, "")  # Ligne de séparation
+            ]
+
+            for title, value in details_entries:
+                details_text.insert(tk.END, title, "bold")
+                details_text.insert(tk.END, f" {value}\n")
+
+        # Empêcher l'utilisateur de modifier le texte
+        details_text.config(state=tk.DISABLED)
+
+        # Bouton de retour pour fermer la fenêtre
+        tk.Button(all_details_window, text="Return", command=all_details_window.destroy).pack(pady=10)
