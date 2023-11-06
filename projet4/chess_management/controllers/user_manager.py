@@ -1,5 +1,7 @@
 from views import user_view
 from models.player import Player
+from utils.load_data import load_state
+import os
 
 
 class UserManager:
@@ -49,3 +51,24 @@ class UserManager:
     def display_player_list(self) -> None:
         """Displays player lists from the current tournament"""
         self.user_view.display_player_list()
+
+    def get_all_players(self):
+        players = []
+        tournaments_path = 'data/tournaments'
+        for filename in os.listdir(tournaments_path):
+            if filename.endswith('.json'):
+                tournament = load_state(filename)
+                if tournament:
+                    for player in tournament.players:
+                        player_data = {
+                            'first_name': player.first_name,
+                            'last_name': player.last_name,
+                            'birthdate': player.birthdate,
+                            'chess_id': player.chess_id
+                        }
+                        players.append(player_data)
+        return players
+
+    def display_all_player_list(self):
+        """Appelle la méthode de la vue pour afficher tous les joueurs."""
+        self.user_view.display_all_player_list()

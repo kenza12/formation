@@ -75,7 +75,9 @@ class TournamentView:
         self.submenu_window = tk.Toplevel(self.controller.root)
         self.submenu_window.title("Reports")
 
+        tk.Button(self.submenu_window, text="List of all players in all tournaments", command=self.controller.user_manager.display_all_player_list).pack()
         tk.Button(self.submenu_window, text="List of players in the active tournament", command=self.controller.user_manager.display_player_list).pack()
+        tk.Button(self.submenu_window, text="View active tournament details", command=self.display_tournament_details).pack()
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
 
     def modify_tournament(self) -> None:
@@ -93,16 +95,32 @@ class TournamentView:
 
         tournament = self.controller.tournament_manager.tournament
 
-        # Displaying the details of the tournament
-        tk.Label(self.details_window, text=f"Name: {tournament.name}").pack()
-        tk.Label(self.details_window, text=f"Location: {tournament.location}").pack()
-        tk.Label(self.details_window, text=f"Start Date: {tournament.start_date}").pack()
-        tk.Label(self.details_window, text=f"End Date: {tournament.end_date}").pack()
-        tk.Label(self.details_window, text=f"Description: {tournament.description}").pack()
-        tk.Label(self.details_window, text=f"Number of Rounds: {tournament.round_number}").pack()
+        # Create a Text widget for structured display
+        details_text = tk.Text(self.details_window, wrap=tk.NONE, font=("Helvetica", 11))
+        details_text.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+        # Configure bold style for titles
+        details_text.tag_configure("bold", font=("Helvetica", 11, "bold"))
+
+        # Inserting tournament details with titles in bold followed by values
+        details_entries = [
+            ("Name:", tournament.name),
+            ("Location:", tournament.location),
+            ("Start Date:", tournament.start_date),
+            ("End Date:", tournament.end_date),
+            ("Description:", tournament.description),
+            ("Number of Rounds:", str(tournament.round_number))
+        ]
+
+        for title, value in details_entries:
+            details_text.insert(tk.END, title, "bold")
+            details_text.insert(tk.END, f" {value}\n")
+
+        # Prevent user from editing the text
+        details_text.config(state=tk.DISABLED)
 
         # Return button to close details window
-        tk.Button(self.details_window, text="Return", command=self.details_window.destroy).pack()
+        tk.Button(self.details_window, text="Return", command=self.details_window.destroy).pack(pady=10)
 
     def ask_match_scores(self, matches: list) -> dict:
         """
