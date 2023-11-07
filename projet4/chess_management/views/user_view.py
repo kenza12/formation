@@ -93,7 +93,7 @@ class UserView:
     def display_player_list(self) -> None:
         """Display the list of players in the active tournament, sorted alphabetically."""
         if not self.controller.tournament_manager.tournament:
-            print("No ongoing tournament. Please create one before listing players.")
+            messagebox.showinfo("Information", "No ongoing tournament. Please create one before listing players.")
             return
 
         # Create a new window to show the player list
@@ -104,14 +104,13 @@ class UserView:
         frame = tk.Frame(self.list_window)
         frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-        # Horizontal scrollbar
-        xscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL)
-        xscrollbar.pack(side=tk.BOTTOM, fill=tk.X)
-
         # Create a Text widget to display player details
-        player_text = tk.Text(frame, wrap=tk.NONE, font=("Helvetica", 11), xscrollcommand=xscrollbar.set)
+        player_text = tk.Text(frame, wrap=tk.NONE, font=("Helvetica", 11))
         player_text.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
-        xscrollbar.config(command=player_text.xview)
+        # Horizontal scrollbar
+        xscrollbar = tk.Scrollbar(frame, orient=tk.HORIZONTAL, command=player_text.xview)
+        xscrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        player_text['xscrollcommand'] = xscrollbar.set
 
         # Configure the "bold" style tag
         player_text.tag_configure("bold", font=("Helvetica", 11, "bold"))
@@ -123,27 +122,16 @@ class UserView:
         )
 
         for player in sorted_players:
-            player_title = "• Player: "
-            player_text.insert(tk.END, player_title, "bold")
-            player_details = f"{player.last_name} {player.first_name} - "
-            player_text.insert(tk.END, player_details)
-
-            # Add "Chess ID" in bold, followed by its value
-            chess_id_text = "Chess ID: "
-            player_text.insert(tk.END, chess_id_text, "bold")
+            player_text.insert(tk.END, "• Player: ", "bold")
+            player_text.insert(tk.END, f"{player.last_name} {player.first_name} - ")
+            player_text.insert(tk.END, "Chess ID: ", "bold")
             player_text.insert(tk.END, f"{player.chess_id} - ")
-
-            # Add "Birthdate" in bold, followed by its value
-            birthdate_text = "Birthdate: "
-            player_text.insert(tk.END, birthdate_text, "bold")
+            player_text.insert(tk.END, "Birthdate: ", "bold")
             player_text.insert(tk.END, f"{player.birthdate}\n")
 
-        # Prevent the user from modifying the text
+        # Prevent the user from modifying the text and add a button to close the window
         player_text.config(state=tk.DISABLED)
-
-        # Button to close the window
-        close_button = tk.Button(self.list_window, text="Close", command=self.list_window.destroy)
-        close_button.pack(pady=10)
+        tk.Button(self.list_window, text="Close", command=self.list_window.destroy).pack(pady=10)
 
     def display_all_player_list(self) -> None:
         """Affiche la liste des joueurs de tous les tournois, triée par ordre alphabétique."""

@@ -61,13 +61,14 @@ class Match:
         Returns:
             Player or None: The winning player or None if the match ended in a draw.
         """
-        if self.score1 is None or self.score2 is None:
-            return None
-        if self.score1 > self.score2:
-            return self.player1
-        elif self.score2 > self.score1:
-            return self.player2
-        return None
+        winner = None  # Default to None, which covers a draw or if scores are not set.
+        if self.score1 is not None and self.score2 is not None:  # Proceed only if scores are set
+            if self.score1 > self.score2:
+                winner = self.player1
+            elif self.score2 > self.score1:
+                winner = self.player2
+
+        return winner
 
     def to_dict(self) -> dict:
         """Converts the match object to a dictionary.

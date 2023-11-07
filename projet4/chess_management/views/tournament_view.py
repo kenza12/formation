@@ -168,63 +168,34 @@ class TournamentView:
         tk.Button(self.details_window, text="Return", command=self.details_window.destroy).pack(pady=10)
 
     def ask_match_scores(self, matches: list) -> dict:
-        """Prompt the user to input scores for all matches in a given round.
-
-        :param matches: List of match objects to gather scores for.
-        :return: A dictionary containing matches as keys and scores as values.
-        """
-
-        # Retrieve the current round number
+        """Prompt the user to input scores for all matches in a given round."""
         current_round_number = len(self.controller.tournament_manager.tournament.rounds)
-
-        # Create a new tkinter window to input scores
         scores_window = tk.Toplevel(self.controller.root)
         scores_window.title(f"Enter scores for Round {current_round_number}")
-
         self.score_entries = {}
 
-        # For each match, create an input interface for scores
         for match in matches:
             frame = tk.Frame(scores_window)
             frame.pack(pady=10)
 
-            # Player 1 score input
-            player1_label = tk.Label(frame, text=f"{match.player1.get_full_name()}:")
-            player1_label.grid(row=0, column=0)
+            tk.Label(frame, text=f"{match.player1.get_full_name()}:").grid(row=0, column=0)
             player1_score = tk.StringVar(value="0")
-            player1_entry = tk.Spinbox(frame, from_=0, to=1, increment=0.5, textvariable=player1_score, width=5)
-            player1_entry.grid(row=0, column=1)
-
-            # "VS" label
-            vs_label = tk.Label(frame, text="VS")
-            vs_label.grid(row=0, column=2)
-
-            # Player 2 score input
-            player2_label = tk.Label(frame, text=f"{match.player2.get_full_name()}:")
-            player2_label.grid(row=0, column=3)
+            tk.Spinbox(frame, from_=0, to=1, increment=0.5, textvariable=player1_score, width=5).grid(row=0, column=1)
+            tk.Label(frame, text="VS").grid(row=0, column=2)
+            tk.Label(frame, text=f"{match.player2.get_full_name()}:").grid(row=0, column=3)
             player2_score = tk.StringVar(value="0")
-            player2_entry = tk.Spinbox(frame, from_=0, to=1, increment=0.5, textvariable=player2_score, width=5)
-            player2_entry.grid(row=0, column=4)
-
+            tk.Spinbox(frame, from_=0, to=1, increment=0.5, textvariable=player2_score, width=5).grid(row=0, column=4)
             self.score_entries[match] = (player1_score, player2_score)
 
-        # Submit button
-        submit_button = tk.Button(scores_window, text="Submit", command=scores_window.destroy)
-        submit_button.pack(pady=20)
-
-        # Wait for the user to submit the scores
+        tk.Button(scores_window, text="Submit", command=scores_window.destroy).pack(pady=20)
         scores_window.wait_window()
 
         scores = {}
         for match, (score1_var, score2_var) in self.score_entries.items():
-            score1 = float(score1_var.get())
-            score2 = float(score2_var.get())
-
-            # Check if scores are valid
+            score1, score2 = float(score1_var.get()), float(score2_var.get())
             if score1 not in [0, 0.5, 1] or score2 not in [0, 0.5, 1]:
                 messagebox.showerror("Error", "Invalid scores. Only 0, 0.5, and 1 are allowed.")
-                return self.ask_match_scores(matches)  # Ask for scores again if invalid
-
+                return self.ask_match_scores(matches)  # Recursive call if invalid
             scores[match] = (score1, score2)
 
         return scores
@@ -264,7 +235,9 @@ class TournamentView:
             points_player1 = self.controller.tournament_manager.tournament.get_player_points(match.player1)
             points_player2 = self.controller.tournament_manager.tournament.get_player_points(match.player2)
 
-            label_text = f"{match.player1.get_full_name()}: {points_player1} points VS {match.player2.get_full_name()}: {points_player2} points"
+            player1_text = f"{match.player1.get_full_name()}: {points_player1} points"
+            player2_text = f"{match.player2.get_full_name()}: {points_player2} points"
+            label_text = f"{player1_text} VS {player2_text}"
             label = tk.Label(self.round_window, text=label_text)
             label.grid(row=i, column=0, sticky="w", padx=10, pady=5, columnspan=2)
 
@@ -401,7 +374,9 @@ class TournamentView:
                 # Récupérer les points totaux pour chaque joueur de tous les rounds précédents
                 total_points_player1 = match.total_points_player1
                 total_points_player2 = match.total_points_player2
-                match_details = f"{match.player1.get_full_name()} ({total_points_player1} points) VS {match.player2.get_full_name()} ({total_points_player2} points)"
+                player1_details = f"{match.player1.get_full_name()} ({total_points_player1} points)"
+                player2_details = f"{match.player2.get_full_name()} ({total_points_player2} points)"
+                match_details = f"{player1_details} VS {player2_details}"
 
                 tk.Label(rounds_window, text=match_details).pack(anchor="w")
 

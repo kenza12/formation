@@ -30,9 +30,12 @@ class Round:
         Returns:
             str: String displaying the round's details.
         """
-        start_time_str = self.start_time.strftime("%Y-%m-%d %H:%M:%S") if self.start_time else "N/A"
-        end_time_str = self.end_time.strftime("%Y-%m-%d %H:%M:%S") if self.end_time else "N/A"
-        return f"Round {self.name} - Matches: {len(self.matches)} - Start Time: {start_time_str} - End Time: {end_time_str}"
+        start_time_str = (self.start_time.strftime("%Y-%m-%d %H:%M:%S")
+                          if self.start_time else "N/A")
+        end_time_str = (self.end_time.strftime("%Y-%m-%d %H:%M:%S")
+                        if self.end_time else "N/A")
+        return (f"Round {self.name} - Matches: {len(self.matches)} - "
+                f"Start Time: {start_time_str} - End Time: {end_time_str}")
 
     @property
     def is_finished(self) -> bool:

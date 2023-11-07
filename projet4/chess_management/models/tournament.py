@@ -32,15 +32,15 @@ class Tournament:
         location: str,
         start_date: str,
         end_date: str,
-        description: str = "",
-        round_number: int = 4,
+        **kwargs
     ) -> None:
+        """Initialize the Tournament with all necessary details."""
         self.name = name
         self.location = location
         self.start_date = start_date
         self.end_date = end_date
-        self.description = description
-        self.round_number = round_number
+        self.description = kwargs.get('description', "")
+        self.round_number = kwargs.get('round_number', 4)
         self.current_round = 1
         self.rounds = []
         self.players = []
@@ -102,7 +102,7 @@ class Tournament:
         for i, player1 in enumerate(self.players):
             if player1.chess_id in paired_players:
                 continue
-            for j, player2 in enumerate(self.players[i + 1:], start=i + 1):
+            for _, player2 in enumerate(self.players[i + 1:], start=i + 1):
                 if (
                     (player2.chess_id in paired_players)
                     or ((player1.chess_id, player2.chess_id) in played_matches)
@@ -139,8 +139,12 @@ class Tournament:
 
     def __str__(self) -> str:
         """Provides a human-readable string representation of the tournament."""
-
-        return f"Tournament: {self.name}, Location: {self.location}, Start Date: {self.start_date}, End Date: {self.end_date}, Current Round: {self.current_round}, Max Rounds: {self.round_number}, Description: {self.description}"
+        return (
+            f"Tournament: {self.name}, Location: {self.location}, "
+            f"Start Date: {self.start_date}, End Date: {self.end_date}, "
+            f"Current Round: {self.current_round}, Max Rounds: {self.round_number}, "
+            f"Description: {self.description}"
+        )
 
     def to_dict(self) -> dict:
         """Serializes the Tournament object to a dictionary for storage or transmission.
