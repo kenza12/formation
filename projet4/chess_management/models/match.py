@@ -20,6 +20,8 @@ class Match:
         self.player2 = player2
         self.score1 = score1
         self.score2 = score2
+        self.total_points_player1 = 0
+        self.total_points_player2 = 0
 
     @property
     def is_finished(self) -> bool:
@@ -77,7 +79,9 @@ class Match:
             "player1": self.player1.to_dict(),
             "player2": self.player2.to_dict(),
             "score1": self.score1,
-            "score2": self.score2
+            "score2": self.score2,
+            "total_points_player1": self.total_points_player1,
+            "total_points_player2": self.total_points_player2
         }
 
     @classmethod
@@ -93,7 +97,17 @@ class Match:
         """
         player1 = Player.from_dict(data["player1"])
         player2 = Player.from_dict(data["player2"])
-        match = cls(player1, player2)
-        match.score1 = data.get("score1", None)
-        match.score2 = data.get("score2", None)
+
+        # Assign the scores from the dictionary if they exist
+        score1 = data.get("score1")
+        score2 = data.get("score2")
+
+        # Assign the total points from the dictionary if they exist
+        total_points_player1 = data.get("total_points_player1", 0)  # Default to 0 if not present
+        total_points_player2 = data.get("total_points_player2", 0)  # Default to 0 if not present
+
+        match = cls(player1, player2, score1, score2)
+        match.total_points_player1 = total_points_player1
+        match.total_points_player2 = total_points_player2
+
         return match

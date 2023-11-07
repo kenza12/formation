@@ -79,6 +79,7 @@ class TournamentView:
         tk.Button(self.submenu_window, text="List of players in the active tournament", command=self.controller.user_manager.display_player_list).pack()
         tk.Button(self.submenu_window, text="View active tournament details", command=self.display_tournament_details).pack()
         tk.Button(self.submenu_window, text="View all tournaments details", command=self.controller.tournament_manager.display_all_tournaments).pack()
+        tk.Button(self.submenu_window, text="View active rounds and matches", command=self.display_active_rounds_and_matches).pack()
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
 
     def modify_tournament(self) -> None:
@@ -318,3 +319,35 @@ class TournamentView:
 
         # Bouton de retour pour fermer la fenêtre
         tk.Button(all_details_window, text="Return", command=all_details_window.destroy).pack(pady=10)
+
+    def display_active_rounds_and_matches(self) -> None:
+        """Display the rounds and matches of the active tournament with updated total points."""
+        tournament = self.controller.tournament_manager.tournament
+        if not tournament or not tournament.rounds:
+            messagebox.showinfo("Information", "No active rounds or matches to display.")
+            return
+
+        # Create a new tkinter window to display rounds and matches
+        rounds_window = tk.Toplevel(self.controller.root)
+        rounds_window.title("Active Rounds and Matches")
+
+        # Utiliser un set pour suivre les matchs déjà affichés
+        displayed_matches = set()
+
+        # Afficher les matchs de chaque round
+        for round in tournament.rounds:
+            tk.Label(rounds_window, text=f"{round.name}:", font=("Helvetica", 11, "bold")).pack(anchor='w')
+            
+            for match in round.matches:
+                # Récupérer les points totaux pour chaque joueur de tous les rounds précédents
+                total_points_player1 = match.total_points_player1
+                total_points_player2 = match.total_points_player2
+                match_details = f"{match.player1.get_full_name()} ({total_points_player1} points) VS {match.player2.get_full_name()} ({total_points_player2} points)"
+                
+                # Vérifier si les détails du match sont déjà affichés pour éviter les doublons
+                if match_details not in displayed_matches:
+                    tk.Label(rounds_window, text=match_details).pack(anchor='w')
+                    displayed_matches.add(match_details)
+
+        # Close button to close the rounds and matches window
+        tk.Button(rounds_window, text="Close", command=rounds_window.destroy).pack(pady=10)

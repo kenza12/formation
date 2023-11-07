@@ -60,7 +60,6 @@ class ApplicationController:
         if tournament:
             # If a valid tournament is loaded, resume it
             self.tournament_manager.tournament = tournament
-            self.tournament_manager.resume_tournament()
 
     def register_player(self, **kwargs) -> None:
         """

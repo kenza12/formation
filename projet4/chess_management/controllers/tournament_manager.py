@@ -29,6 +29,13 @@ class TournamentManager:
         if self.validate_tournament():
             self.initiate_next_round()
 
+    def start_or_resume_tournament(self) -> None:
+        """Starts or resumes a tournament based on its current state."""
+        if self.tournament and not self.tournament.is_ended():
+            self.resume_tournament()
+        else:
+            self.start_tournament()
+
     def validate_tournament(self) -> bool:
         """Validates if the tournament has correct details."""
         # Check if the tournament exists
@@ -56,22 +63,26 @@ class TournamentManager:
         scores = self.controller.menu_manager.tournament_view.ask_match_scores(current_round.matches)
         for match, (score1, score2) in scores.items():
             match.set_scores(score1, score2)
-
-        # Update players' scores
-        for match in current_round.matches:
-            self.controller.user_manager.update_player_scores(match)
+            # Update total points for each player in the match
+            match.total_points_player1 = self.tournament.get_player_points(match.player1)
+            match.total_points_player2 = self.tournament.get_player_points(match.player2)
 
         # After updating scores, check if the round is finished
         if current_round.is_finished:
             current_round.end_round()
 
         # Display results of the current round
-        self.controller.menu_manager.tournament_view.display_round_results(current_round, start_time=current_round.start_time, end_time=current_round.end_time)
+        self.controller.menu_manager.tournament_view.display_round_results(current_round)
 
+        # Check if the tournament has ended and display the appropriate view
+        self.check_tournament_end()
+
+    def check_tournament_end(self):
+        """Check if the tournament has ended and display the appropriate view."""
         if self.tournament.is_ended():
             self.controller.menu_manager.tournament_view.display_ended_tournament()
-            return
         else:
+            # Ask user if they want to proceed to the next round
             next_round = self.controller.menu_manager.tournament_view.ask_for_next_round()
             if next_round:
                 self.initiate_next_round()
@@ -88,16 +99,24 @@ class TournamentManager:
             self.controller.menu_manager.tournament_view.display_ended_tournament()
             return
 
-        # Check if the rounds list is empty
-        if not self.tournament.rounds:
-            print("No round has been played yet. Please start the tournament.")
-            return
-
-        current_round = self.tournament.rounds[-1]
-        if current_round.is_finished:
-            print("The last round has ended. Please start the next round manually.")
+        # Si le dernier round enregistré est terminé, vérifiez s'il reste des rounds à jouer.
+        if self.tournament.current_round <= len(self.tournament.rounds):
+            last_round = self.tournament.rounds[self.tournament.current_round - 1]
+            if last_round.is_finished:
+                # Si c'est le cas et qu'il reste des rounds, préparez-vous pour le prochain round.
+                if self.tournament.current_round < self.tournament.round_number:
+                    print("Preparing for the next round. Please start when ready.")
+                    # Ici, ne démarrez pas le round, attendez que l'utilisateur commence le round.
+                else:
+                    # Si tous les rounds sont terminés, le tournoi est terminé.
+                    self.controller.menu_manager.tournament_view.display_ended_tournament()
+            else:
+                # Si le dernier round n'est pas terminé, continuez avec lui.
+                self.update_round_with_view()
         else:
-            self.update_round_with_view()
+            # Si aucun round n'a été joué, commencez par le premier round.
+            print("Starting the first round.")
+            self.initiate_next_round()
 
     def display_reports_submenu(self) -> None:
         """Displays the reports submenu."""

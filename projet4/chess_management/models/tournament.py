@@ -31,42 +31,41 @@ class Tournament:
         self.current_round = 1
         self.rounds = []
         self.players = []
-        self.player_scores = {}
 
     def add_player(self, player: Player) -> None:
         """Add a new player to the tournament and initialize the score to 0"""
         self.players.append(player)
-        self.player_scores[player.chess_id] = 0
-
-    def add_points(self, player: Player, points: float) -> None:
-        """Add points to a player's score."""
-        self.player_scores[player.chess_id] += points
 
     def get_player_points(self, player: Player) -> float:
-        """Retrieve the points of a player."""
-        return self.player_scores.get(player.chess_id, 0)
+        """Calculate the total points of a player by summing up the points from all matches."""
+        total_points = 0
+        for round in self.rounds:
+            for match in round.matches:
+                if match.player1 == player:
+                    total_points += match.score1
+                elif match.player2 == player:
+                    total_points += match.score2
+        return total_points
 
-    def start_new_round(self) -> None:
-        """Start a new round in the tournament."""
-
-        # Players are shuffled in the first round and sorted by score for subsequent rounds.
+    def start_new_round(self):
+        """Starts a new round in the tournament only if the previous one is finished or if there is no round yet."""
+        if self.rounds and not self.rounds[-1].is_finished:
+            print("The current round is not yet finished.")
+            return
+        
         if self.current_round == 1:
             self.shuffle_players()
         else:
-            self.players.sort(key=self.player_sort_key, reverse=True)
-
-        # If no new matches can be formed or the maximum number of rounds is reached, the tournament ends.
+            self.players.sort(key=lambda player: -self.get_player_points(player))
+        
         if self.is_ended():
             print("No new matches can be formed. The tournament has ended.")
             return
-
-        # Generates player pairs for the current round. It avoids forming pairs that have already played together in previous rounds.
+        
+        # Generate player pairs for the new round
         new_round, _ = self.generate_round_pairs()
         self.rounds.append(new_round)
-
-        # Marks the start time of the round.
         new_round.start_round()
-
         print(f"Round {self.current_round} of the tournament has started.")
         self.current_round += 1
 
@@ -105,10 +104,9 @@ class Tournament:
         random.shuffle(self.players)
 
     def player_sort_key(self, player: Player) -> tuple:
-        """Sort key function for ordering players based on scores and IDs."""
-        score = -self.player_scores.get(player.chess_id, 0)
-        id = player.chess_id
-        return (score, id)
+        """Sort key function for ordering players based on total points and IDs."""
+        total_points = self.get_player_points(player)
+        return (-total_points, player.chess_id)
 
     def is_ended(self) -> bool:
         """Check if the tournament has ended."""
@@ -122,8 +120,8 @@ class Tournament:
         return f"Tournament: {self.name}, Location: {self.location}, Start Date: {self.start_date}, End Date: {self.end_date}, Current Round: {self.current_round}, Max Rounds: {self.round_number}, Description: {self.description}"
 
     def to_dict(self) -> dict:
-        """Converts the tournament object to a dictionary."""
-        return {
+        """Converts the tournament object to a dictionary, including total points per player per round."""
+        tournament_dict = {
             "name": self.name,
             "location": self.location,
             "start_date": self.start_date,
@@ -132,33 +130,66 @@ class Tournament:
             "round_number": self.round_number,
             "current_round": self.current_round,
             "players": [player.to_dict() for player in self.players],
-            "rounds": [round.to_dict() for round in self.rounds],
-            "player_scores": self.player_scores
+            "rounds": []
         }
+
+        # Add rounds and matches information with updated total points
+        for round in self.rounds:
+            round_dict = {
+                "name": round.name,
+                "matches": [],
+                "is_finished": round.is_finished
+            }
+            
+            # Update each match with the total points of each player by that round
+            for match in round.matches:
+                match_dict = match.to_dict()
+                round_dict['matches'].append(match_dict)
+            
+            tournament_dict['rounds'].append(round_dict)
+
+        return tournament_dict
 
     @classmethod
     def from_dict(cls, data: dict) -> "Tournament":
-        """Generates a Tournament instance from a dictionary representation."""
+        """Initializes a tournament from a dictionary representation, including previous rounds and scores."""
         tournament = cls(
-            data["name"],
-            data["location"],
-            data["start_date"],
-            data["end_date"],
-            data.get("description", ""),
-            data.get("round_number", 4)
+            name=data["name"],
+            location=data["location"],
+            start_date=data["start_date"],
+            end_date=data["end_date"],
+            description=data.get("description", ""),
+            round_number=data.get("round_number", 4)
         )
-
+        tournament.current_round = data.get("current_round", 1)
+        
+        # Add players
         for player_data in data.get("players", []):
-            tournament.add_player(Player.from_dict(player_data))
-
+            player = Player.from_dict(player_data)
+            tournament.players.append(player)
+        
+        # Add rounds and matches
         for round_data in data.get("rounds", []):
             round = Round.from_dict(round_data)
+            for match_data in round_data["matches"]:
+                player1 = tournament.find_player_by_id(match_data["player1"]["chess_id"])
+                player2 = tournament.find_player_by_id(match_data["player2"]["chess_id"])
+                match = Match(player1, player2)
+                match.score1 = match_data["score1"]
+                match.score2 = match_data["score2"]
+                match.total_points_player1 = match_data.get("total_points_player1", 0)
+                match.total_points_player2 = match_data.get("total_points_player2", 0)
+                round.matches.append(match)
             tournament.rounds.append(round)
-
-        tournament.player_scores = data.get("player_scores", {})
-        tournament.current_round = data.get("current_round", 1)
-
+        
         return tournament
+
+    def find_player_by_id(self, chess_id: str) -> Player:
+        """Finds a player in the tournament by their chess ID."""
+        for player in self.players:
+            if player.chess_id == chess_id:
+                return player
+        raise ValueError(f"Player with ID {chess_id} not found in tournament.")
 
     def is_valid_player_count(self) -> bool:
         """Checks if the number of players is even."""
