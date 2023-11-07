@@ -5,8 +5,7 @@ import os
 
 
 class UserManager:
-    """
-    Manages the interaction between the user and the player management functionalities.
+    """Manages the interaction between the user and the player management functionalities.
 
     Attributes:
         controller: The main application controller.
@@ -36,7 +35,10 @@ class UserManager:
         self.user_view.display_player_submenu()
 
     def modify_player(self) -> None:
-        """Modifies the details of a specific player. (Functionality not yet implemented)"""
+        """Modifies the details of a specific player.
+
+        (Functionality not yet implemented)
+        """
         pass
 
     def update_player_scores(self, match) -> None:
@@ -47,24 +49,24 @@ class UserManager:
         else:  # In case of a tie
             self.controller.tournament_manager.tournament.add_points(match.player1, 0.5)
             self.controller.tournament_manager.tournament.add_points(match.player2, 0.5)
-    
+
     def display_player_list(self) -> None:
-        """Displays player lists from the current tournament"""
+        """Displays player lists from the current tournament."""
         self.user_view.display_player_list()
 
     def get_all_players(self):
         players = []
-        tournaments_path = 'data/tournaments'
+        tournaments_path = "data/tournaments"
         for filename in os.listdir(tournaments_path):
-            if filename.endswith('.json'):
+            if filename.endswith(".json"):
                 tournament = load_state(filename)
                 if tournament:
                     for player in tournament.players:
                         player_data = {
-                            'first_name': player.first_name,
-                            'last_name': player.last_name,
-                            'birthdate': player.birthdate,
-                            'chess_id': player.chess_id
+                            "first_name": player.first_name,
+                            "last_name": player.last_name,
+                            "birthdate": player.birthdate,
+                            "chess_id": player.chess_id,
                         }
                         players.append(player_data)
         return players

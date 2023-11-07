@@ -1,11 +1,8 @@
 class Player:
-    """
-    Represents a chess player with relevant details.
-    """
-    
+    """Represents a chess player with relevant details."""
+
     def __init__(self, chess_id: int, first_name: str, last_name: str, birthdate: str) -> None:
-        """
-        Initializes a Player instance.
+        """Initializes a Player instance.
 
         Args:
             chess_id (int): Unique identification number for the player.
@@ -19,8 +16,7 @@ class Player:
         self.birthdate = birthdate
 
     def __str__(self) -> str:
-        """ 
-        Returns the string representation of the player.
+        """Returns the string representation of the player.
 
         Returns:
             str: A string displaying the player's full details.
@@ -28,8 +24,7 @@ class Player:
         return f"{self.last_name} {self.first_name} (Chess ID: {self.chess_id}, Birthdate: {self.birthdate})"
 
     def get_full_name(self) -> str:
-        """
-        Returns the full name of the player.
+        """Returns the full name of the player.
 
         Returns:
             str: The full name, consisting of the first name and last name.
@@ -37,8 +32,7 @@ class Player:
         return f"{self.first_name} {self.last_name}"
 
     def to_dict(self) -> dict:
-        """
-        Converts the player object to a dictionary.
+        """Converts the player object to a dictionary.
 
         Returns:
             dict: A dictionary representation of the player.
@@ -51,9 +45,8 @@ class Player:
         }
 
     @classmethod
-    def from_dict(cls, player_data: dict) -> 'Player':
-        """
-        Creates a player instance from a dictionary representation.
+    def from_dict(cls, player_data: dict) -> "Player":
+        """Creates a player instance from a dictionary representation.
 
         Args:
             player_data (dict): The dictionary containing player data.
@@ -65,5 +58,5 @@ class Player:
             player_data["chess_id"],
             player_data["first_name"],
             player_data["last_name"],
-            player_data["birthdate"]
+            player_data["birthdate"],
         )

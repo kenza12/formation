@@ -2,9 +2,8 @@ from views import tournament_view
 
 
 class MenuManager:
-    """
-    Manages the interaction between the user and the tournament menu.
-    
+    """Manages the interaction between the user and the tournament menu.
+
     Attributes:
         controller: The main application controller.
         tournament_view (tournament_view.TournamentView): The view to display the tournament form.

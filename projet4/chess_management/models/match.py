@@ -2,13 +2,16 @@ from models.player import Player
 
 
 class Match:
-    """
-    Represents a chess match between two players.
-    """
+    """Represents a chess match between two players."""
 
-    def __init__(self, player1: Player, player2: Player, score1: float = None, score2: float = None) -> None:
-        """
-        Initializes a Match instance.
+    def __init__(
+        self,
+        player1: Player,
+        player2: Player,
+        score1: float = None,
+        score2: float = None,
+    ) -> None:
+        """Initializes a Match instance.
 
         Args:
             player1 (Player): The first player in the match.
@@ -25,8 +28,7 @@ class Match:
 
     @property
     def is_finished(self) -> bool:
-        """
-        Checks if the match has ended.
+        """Checks if the match has ended.
 
         Returns:
             bool: True if the scores for both players are set, otherwise False.
@@ -34,8 +36,7 @@ class Match:
         return self.score1 is not None and self.score2 is not None
 
     def set_scores(self, score1: float, score2: float) -> None:
-        """
-        Sets the scores for the players.
+        """Sets the scores for the players.
 
         Args:
             score1 (float): Score for player1.
@@ -45,17 +46,17 @@ class Match:
         self.score2 = score2
 
     def __str__(self) -> str:
-        """ 
-        Returns the string representation of the match.
+        """Returns the string representation of the match.
 
         Returns:
             str: A string displaying the match details.
         """
-        return f"{self.player1.get_full_name()} vs {self.player2.get_full_name()} - Scores: {self.score1}-{self.score2}"
+        return (
+            f"{self.player1.get_full_name()} vs {self.player2.get_full_name()} - Scores: {self.score1}-{self.score2}"
+        )
 
     def get_winner(self) -> Player:
-        """
-        Returns the winner of the match or None if it's a draw.
+        """Returns the winner of the match or None if it's a draw.
 
         Returns:
             Player or None: The winning player or None if the match ended in a draw.
@@ -69,8 +70,7 @@ class Match:
         return None
 
     def to_dict(self) -> dict:
-        """
-        Converts the match object to a dictionary.
+        """Converts the match object to a dictionary.
 
         Returns:
             dict: A dictionary representation of the match.
@@ -81,13 +81,12 @@ class Match:
             "score1": self.score1,
             "score2": self.score2,
             "total_points_player1": self.total_points_player1,
-            "total_points_player2": self.total_points_player2
+            "total_points_player2": self.total_points_player2,
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Match':
-        """
-        Creates a match instance from a dictionary representation.
+    def from_dict(cls, data: dict) -> "Match":
+        """Creates a match instance from a dictionary representation.
 
         Args:
             data (dict): The dictionary containing match data.

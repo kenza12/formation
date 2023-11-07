@@ -5,9 +5,8 @@ from models.round import Round
 
 
 class Tournament:
-    """
-    Represents a chess tournament with multiple rounds and players.
-    
+    """Represents a chess tournament with multiple rounds and players.
+
     The tournament is composed of a list of players and rounds, where each round
     contains a set of matches. The tournament tracks the current round and has
     a total number of rounds to be played.
@@ -19,7 +18,7 @@ class Tournament:
         start_date (str): Start date of the tournament.
         end_date (str): End date of the tournament.
         description (str): Additional description of the tournament.
-    
+
     # Structure of the tournament
         round_number (int): Total number of rounds in the tournament.
         current_round (int): The round that is currently being played.
@@ -27,7 +26,15 @@ class Tournament:
         players (List[Player]): A list to store the players participating in the tournament.
     """
 
-    def __init__(self, name: str, location: str, start_date: str, end_date: str, description: str = "", round_number: int = 4) -> None:
+    def __init__(
+        self,
+        name: str,
+        location: str,
+        start_date: str,
+        end_date: str,
+        description: str = "",
+        round_number: int = 4,
+    ) -> None:
         self.name = name
         self.location = location
         self.start_date = start_date
@@ -55,22 +62,23 @@ class Tournament:
         return total_points
 
     def start_new_round(self):
-        """Begins a new round if the previous one has finished, otherwise alerts that the current round is still active."""
+        """Begins a new round if the previous one has finished, otherwise alerts that the current round is still
+        active."""
         if self.rounds and not self.rounds[-1].is_finished:
             print("The current round is not yet finished.")
             return
-        
+
         # Shuffle players at the start or sort them by points for subsequent rounds.
         if self.current_round == 1:
             self.shuffle_players()
         else:
             self.players.sort(key=lambda player: -self.get_player_points(player))
-        
+
         # Check if the tournament is finished before starting a new round.
         if self.is_ended():
             print("No new matches can be formed. The tournament has ended.")
             return
-        
+
         # Generate player pairs for the new round
         new_round, _ = self.generate_round_pairs()
         self.rounds.append(new_round)
@@ -79,8 +87,9 @@ class Tournament:
         self.current_round += 1
 
     def generate_round_pairs(self) -> tuple:
-        """Generates unique player pairs for matches in the current round to ensure each player only plays against another once."""
-        
+        """Generates unique player pairs for matches in the current round to ensure each player only plays against
+        another once."""
+
         # Collect all previously played matches to avoid repeats.
         played_matches = {(match.player1.chess_id, match.player2.chess_id) for r in self.rounds for match in r.matches}
 
@@ -93,10 +102,12 @@ class Tournament:
         for i, player1 in enumerate(self.players):
             if player1.chess_id in paired_players:
                 continue
-            for j, player2 in enumerate(self.players[i+1:], start=i+1):
-                if (player2.chess_id in paired_players) or \
-                   ((player1.chess_id, player2.chess_id) in played_matches) or \
-                   ((player2.chess_id, player1.chess_id) in played_matches):
+            for j, player2 in enumerate(self.players[i + 1:], start=i + 1):
+                if (
+                    (player2.chess_id in paired_players)
+                    or ((player1.chess_id, player2.chess_id) in played_matches)
+                    or ((player2.chess_id, player1.chess_id) in played_matches)
+                ):
                     continue
 
                 current_round_matches.append((player1, player2))
@@ -119,7 +130,8 @@ class Tournament:
         return (-total_points, player.chess_id)
 
     def is_ended(self) -> bool:
-        """Determines if the tournament has finished either by completing the designated number of rounds or if no more matches can be formed."""
+        """Determines if the tournament has finished either by completing the designated number of rounds or if no more
+        matches can be formed."""
         if len(self.rounds) >= self.round_number:
             return True
         _, pairs = self.generate_round_pairs()
@@ -131,12 +143,11 @@ class Tournament:
         return f"Tournament: {self.name}, Location: {self.location}, Start Date: {self.start_date}, End Date: {self.end_date}, Current Round: {self.current_round}, Max Rounds: {self.round_number}, Description: {self.description}"
 
     def to_dict(self) -> dict:
-        """
-        Serializes the Tournament object to a dictionary for storage or transmission.
-        
+        """Serializes the Tournament object to a dictionary for storage or transmission.
+
         This method is typically used for saving the state of the tournament to a file
         or sending over a network in a format that can be easily converted to JSON.
-        
+
         Returns:
             dict: A dictionary representation of the tournament with all its current state data.
         """
@@ -151,7 +162,7 @@ class Tournament:
             "current_round": self.current_round,  # Current round number
             # Convert each player to a dictionary; good for JSON serialization
             "players": [player.to_dict() for player in self.players],
-            "rounds": []  # Initialize rounds as an empty list to be filled next
+            "rounds": [],  # Initialize rounds as an empty list to be filled next
         }
 
         # Iterate over each round in the tournament.
@@ -160,30 +171,29 @@ class Tournament:
             round_dict = {
                 "name": round.name,  # Name of the round
                 "matches": [],  # Initialize matches as an empty list to be filled
-                "is_finished": round.is_finished  # Boolean indicating if the round is finished
+                "is_finished": round.is_finished,  # Boolean indicating if the round is finished
             }
-            
+
             # Iterate over each match in the round.
             for match in round.matches:
                 # Convert the match to a dictionary using its own to_dict method.
                 match_dict = match.to_dict()
                 # Append the match dictionary to the round's list of matches.
-                round_dict['matches'].append(match_dict)
-            
+                round_dict["matches"].append(match_dict)
+
             # Append the fully constructed round dictionary to the tournament's list of rounds.
-            tournament_dict['rounds'].append(round_dict)
+            tournament_dict["rounds"].append(round_dict)
 
         return tournament_dict  # Return the complete tournament dictionary.
 
     @classmethod
     def from_dict(cls, data: dict) -> "Tournament":
-        """
-        Creates a Tournament object from a dictionary representation.
-        This method is typically used when loading a tournament from a saved state, such as a JSON file.
-        
+        """Creates a Tournament object from a dictionary representation. This method is typically used when loading a
+        tournament from a saved state, such as a JSON file.
+
         Args:
             data (dict): A dictionary containing all the tournament information.
-        
+
         Returns:
             Tournament: A tournament object populated with the data from the dictionary.
         """
@@ -194,28 +204,28 @@ class Tournament:
             start_date=data["start_date"],
             end_date=data["end_date"],
             description=data.get("description", ""),
-            round_number=data.get("round_number", 4)
+            round_number=data.get("round_number", 4),
         )
-        
+
         # Set the current round of the tournament, defaulting to 1 if not specified.
         tournament.current_round = data.get("current_round", 1)
-        
+
         # Clear any existing players and rounds before populating from the loaded data.
         tournament.players = []  # Reset the players list.
-        tournament.rounds = []   # Reset the rounds list.
+        tournament.rounds = []  # Reset the rounds list.
 
         # Add players to the tournament from the 'players' data.
         # Each player is created using the Player.from_dict method.
         for player_data in data.get("players", []):
             player = Player.from_dict(player_data)
             tournament.players.append(player)
-        
+
         # Add rounds and their matches to the tournament from the 'rounds' data.
         # Each round is created using the Round.from_dict method.
         for round_data in data.get("rounds", []):
             round = Round.from_dict(round_data)
             round.matches = []  # Reset the matches list for the round.
-            
+
             # For each match in the round, find the players by their ID,
             # and create a Match object with the retrieved players and scores.
             for match_data in round_data["matches"]:
@@ -224,15 +234,15 @@ class Tournament:
                 match = Match(player1, player2)
                 match.score1 = match_data["score1"]
                 match.score2 = match_data["score2"]
-                
+
                 # Set the total points accumulated by each player up to this match.
                 match.total_points_player1 = match_data.get("total_points_player1", 0)
                 match.total_points_player2 = match_data.get("total_points_player2", 0)
                 round.matches.append(match)
-            
+
             # Add the fully constructed round to the tournament's list of rounds.
             tournament.rounds.append(round)
-        
+
         return tournament  # Return the fully reconstructed Tournament object.
 
     def find_player_by_id(self, chess_id: str) -> Player:
@@ -249,6 +259,6 @@ class Tournament:
     def has_duplicate_players(self) -> bool:
         """Checks for duplicate player entries based on chess ID, which should be unique."""
         ids = [player.chess_id for player in self.players]
-        print ("******IDS****")
-        print (ids)
+        print("******IDS****")
+        print(ids)
         return len(ids) != len(set(ids))

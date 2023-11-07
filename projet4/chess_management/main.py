@@ -3,7 +3,6 @@ from controllers import application_controller
 
 
 class MainApplication:
-
     def __init__(self, root):
         self.controller = application_controller.ApplicationController(root)
 

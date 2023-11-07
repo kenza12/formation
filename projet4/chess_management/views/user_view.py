@@ -4,8 +4,7 @@ from tkinter import messagebox
 
 class UserView:
     def __init__(self, controller) -> None:
-        """
-        Initialize the UserView.
+        """Initialize the UserView.
 
         :param controller: Reference to the application controller.
         :type controller: Controller
@@ -55,7 +54,12 @@ class UserView:
             return
 
         # Use the details to register a player through the controller
-        self.controller.register_player(chess_id=chess_id, first_name=first_name, last_name=last_name, birthdate=birthdate)
+        self.controller.register_player(
+            chess_id=chess_id,
+            first_name=first_name,
+            last_name=last_name,
+            birthdate=birthdate,
+        )
 
         # Close the secondary window
         self.form_window.destroy()
@@ -69,9 +73,21 @@ class UserView:
         self.submenu_window = tk.Toplevel(self.controller.root)
         self.submenu_window.title("Player Management")
 
-        tk.Button(self.submenu_window, text="Register a new player", command=self.controller.user_manager.display_registration_form).pack(pady=10)
-        tk.Button(self.submenu_window, text="List all players", command=self.display_player_list).pack(pady=10)
-        tk.Button(self.submenu_window, text="Edit a player", command=self.controller.user_manager.modify_player).pack(pady=10)
+        tk.Button(
+            self.submenu_window,
+            text="Register a new player",
+            command=self.controller.user_manager.display_registration_form,
+        ).pack(pady=10)
+        tk.Button(
+            self.submenu_window,
+            text="List all players",
+            command=self.display_player_list,
+        ).pack(pady=10)
+        tk.Button(
+            self.submenu_window,
+            text="Edit a player",
+            command=self.controller.user_manager.modify_player,
+        ).pack(pady=10)
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack(pady=10)
 
     def display_player_list(self) -> None:
@@ -101,8 +117,10 @@ class UserView:
         player_text.tag_configure("bold", font=("Helvetica", 11, "bold"))
 
         # Get the list of players and sort it alphabetically
-        sorted_players = sorted(self.controller.tournament_manager.tournament.players, 
-                                key=lambda player: player.last_name.lower())
+        sorted_players = sorted(
+            self.controller.tournament_manager.tournament.players,
+            key=lambda player: player.last_name.lower(),
+        )
 
         for player in sorted_players:
             player_title = "• Player: "
@@ -131,8 +149,10 @@ class UserView:
         """Affiche la liste des joueurs de tous les tournois, triée par ordre alphabétique."""
         try:
             players = self.controller.user_manager.get_all_players()  # Récupère les données de tous les joueurs
-            sorted_players = sorted(players, key=lambda player: player['last_name'].lower()) # Trier par nom de famille
-            
+            sorted_players = sorted(
+                players, key=lambda player: player["last_name"].lower()
+            )  # Trier par nom de famille
+
             # Créer une nouvelle fenêtre pour afficher la liste des joueurs
             self.list_window = tk.Toplevel(self.controller.root)
             self.list_window.title("List of all players in all tournaments")
@@ -146,7 +166,6 @@ class UserView:
 
             # Insertion des détails de chaque joueur avec une puce devant
             for player in sorted_players:
-
                 player_title = "• Player: "
                 player_text.insert(tk.END, player_title, "bold")
                 player_details = f"{player['last_name']} {player['first_name']} - "

@@ -6,8 +6,7 @@ class TournamentView:
     """Handles the GUI view for the tournament operations."""
 
     def __init__(self, controller):
-        """
-        Initialize the TournamentView.
+        """Initialize the TournamentView.
 
         :param controller: The main application controller
         """
@@ -26,7 +25,14 @@ class TournamentView:
         self.form_window.title("Create a new tournament")
 
         # Add fields for tournament details input
-        fields = ["Tournament Name:", "Location:", "Start Date:", "End Date:", "Description:", "Number of Rounds:"]
+        fields = [
+            "Tournament Name:",
+            "Location:",
+            "Start Date:",
+            "End Date:",
+            "Description:",
+            "Number of Rounds:",
+        ]
         self.entries = {}
         for field in fields:
             tk.Label(self.form_window, text=field).pack()
@@ -45,7 +51,9 @@ class TournamentView:
         start_date = self.entries["Start Date:"].get()
         end_date = self.entries["End Date:"].get()
         description = self.entries["Description:"].get()
-        rounds = int(self.entries["Number of Rounds:"].get()) if self.entries["Number of Rounds:"].get().isdigit() else 0
+        rounds = (
+            int(self.entries["Number of Rounds:"].get()) if self.entries["Number of Rounds:"].get().isdigit() else 0
+        )
 
         # Use controller to create the tournament
         self.controller.create_tournament(
@@ -54,7 +62,7 @@ class TournamentView:
             start_date=start_date,
             end_date=end_date,
             description=description,
-            round_number=rounds
+            round_number=rounds,
         )
 
         # Close the secondary window
@@ -65,25 +73,60 @@ class TournamentView:
         self.submenu_window = tk.Toplevel(self.controller.root)
         self.submenu_window.title("Tournament Management")
 
-        tk.Button(self.submenu_window, text="Create New Tournament", command=self.display_tournament_form).pack()
-        tk.Button(self.submenu_window, text="Modify Tournament Details", command=self.modify_tournament).pack()
-        tk.Button(self.submenu_window, text="View Tournament Details", command=self.display_tournament_details).pack()
+        tk.Button(
+            self.submenu_window,
+            text="Create New Tournament",
+            command=self.display_tournament_form,
+        ).pack()
+        tk.Button(
+            self.submenu_window,
+            text="Modify Tournament Details",
+            command=self.modify_tournament,
+        ).pack()
+        tk.Button(
+            self.submenu_window,
+            text="View Tournament Details",
+            command=self.display_tournament_details,
+        ).pack()
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
 
     def display_reports_submenu(self) -> None:
-        """Display the submenu for reports"""
+        """Display the submenu for reports."""
         self.submenu_window = tk.Toplevel(self.controller.root)
         self.submenu_window.title("Reports")
 
-        tk.Button(self.submenu_window, text="List of all players in all tournaments", command=self.controller.user_manager.display_all_player_list).pack()
-        tk.Button(self.submenu_window, text="List of players in the active tournament", command=self.controller.user_manager.display_player_list).pack()
-        tk.Button(self.submenu_window, text="View active tournament details", command=self.display_tournament_details).pack()
-        tk.Button(self.submenu_window, text="View all tournaments details", command=self.controller.tournament_manager.display_all_tournaments).pack()
-        tk.Button(self.submenu_window, text="View active rounds and matches", command=self.display_active_rounds_and_matches).pack()
+        tk.Button(
+            self.submenu_window,
+            text="List of all players in all tournaments",
+            command=self.controller.user_manager.display_all_player_list,
+        ).pack()
+        tk.Button(
+            self.submenu_window,
+            text="List of players in the active tournament",
+            command=self.controller.user_manager.display_player_list,
+        ).pack()
+        tk.Button(
+            self.submenu_window,
+            text="View active tournament details",
+            command=self.display_tournament_details,
+        ).pack()
+        tk.Button(
+            self.submenu_window,
+            text="View all tournaments details",
+            command=self.controller.tournament_manager.display_all_tournaments,
+        ).pack()
+        tk.Button(
+            self.submenu_window,
+            text="View active rounds and matches",
+            command=self.display_active_rounds_and_matches,
+        ).pack()
         tk.Button(self.submenu_window, text="Return", command=self.submenu_window.destroy).pack()
 
     def modify_tournament(self) -> None:
-        """Modify an existing tournament. (Functionality not yet implemented)"""
+        """Modify an existing tournament.
+
+        (Functionality not yet implemented)
+        """
         pass
 
     def display_tournament_details(self) -> None:
@@ -111,7 +154,7 @@ class TournamentView:
             ("Start Date:", tournament.start_date),
             ("End Date:", tournament.end_date),
             ("Description:", tournament.description),
-            ("Number of Rounds:", str(tournament.round_number))
+            ("Number of Rounds:", str(tournament.round_number)),
         ]
 
         for title, value in details_entries:
@@ -125,13 +168,12 @@ class TournamentView:
         tk.Button(self.details_window, text="Return", command=self.details_window.destroy).pack(pady=10)
 
     def ask_match_scores(self, matches: list) -> dict:
-        """
-        Prompt the user to input scores for all matches in a given round.
+        """Prompt the user to input scores for all matches in a given round.
 
         :param matches: List of match objects to gather scores for.
         :return: A dictionary containing matches as keys and scores as values.
         """
-        
+
         # Retrieve the current round number
         current_round_number = len(self.controller.tournament_manager.tournament.rounds)
 
@@ -149,7 +191,7 @@ class TournamentView:
             # Player 1 score input
             player1_label = tk.Label(frame, text=f"{match.player1.get_full_name()}:")
             player1_label.grid(row=0, column=0)
-            player1_score = tk.StringVar(value='0')
+            player1_score = tk.StringVar(value="0")
             player1_entry = tk.Spinbox(frame, from_=0, to=1, increment=0.5, textvariable=player1_score, width=5)
             player1_entry.grid(row=0, column=1)
 
@@ -160,7 +202,7 @@ class TournamentView:
             # Player 2 score input
             player2_label = tk.Label(frame, text=f"{match.player2.get_full_name()}:")
             player2_label.grid(row=0, column=3)
-            player2_score = tk.StringVar(value='0')
+            player2_score = tk.StringVar(value="0")
             player2_entry = tk.Spinbox(frame, from_=0, to=1, increment=0.5, textvariable=player2_score, width=5)
             player2_entry.grid(row=0, column=4)
 
@@ -188,14 +230,13 @@ class TournamentView:
         return scores
 
     def display_round_results(self, current_round, start_time=None, end_time=None) -> None:
-        """
-        Display the total points of players for the given round in a tkinter window.
+        """Display the total points of players for the given round in a tkinter window.
 
         :param current_round: The round object whose results are to be displayed.
         :param start_time: The start time of the round.
         :param end_time: The end time of the round.
         """
-        
+
         # Create a new tkinter window to display round results
         self.round_window = tk.Toplevel(self.controller.root)
         self.round_window.title(f"Results - {current_round.name}")
@@ -207,9 +248,17 @@ class TournamentView:
             time_frame = tk.Frame(self.round_window)
             time_frame.grid(row=0, column=0, sticky="w", padx=10, pady=5, columnspan=2)
 
-            tk.Label(time_frame, text=f"Start Time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}", font=bold_font).grid(row=0, column=0, sticky="w", padx=(0, 20))
-            tk.Label(time_frame, text=f"End Time: {end_time.strftime('%Y-%m-%d %H:%M:%S')}", font=bold_font).grid(row=0, column=1, sticky="w")
-            
+            tk.Label(
+                time_frame,
+                text=f"Start Time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}",
+                font=bold_font,
+            ).grid(row=0, column=0, sticky="w", padx=(0, 20))
+            tk.Label(
+                time_frame,
+                text=f"End Time: {end_time.strftime('%Y-%m-%d %H:%M:%S')}",
+                font=bold_font,
+            ).grid(row=0, column=1, sticky="w")
+
         # Display results for each match in the round
         for i, match in enumerate(current_round.matches, start=1):
             points_player1 = self.controller.tournament_manager.tournament.get_player_points(match.player1)
@@ -252,12 +301,25 @@ class TournamentView:
 
             tk.Label(self.ended_tournament_window, text=f"Nom: {tournament.name}").pack()
             tk.Label(self.ended_tournament_window, text=f"Lieu: {tournament.location}").pack()
-            tk.Label(self.ended_tournament_window, text=f"Date de début: {tournament.start_date}").pack()
+            tk.Label(
+                self.ended_tournament_window,
+                text=f"Date de début: {tournament.start_date}",
+            ).pack()
             tk.Label(self.ended_tournament_window, text=f"Date de fin: {tournament.end_date}").pack()
-            tk.Label(self.ended_tournament_window, text=f"Description: {tournament.description}").pack()
-            tk.Label(self.ended_tournament_window, text=f"Nombre de tours: {tournament.round_number}").pack()
+            tk.Label(
+                self.ended_tournament_window,
+                text=f"Description: {tournament.description}",
+            ).pack()
+            tk.Label(
+                self.ended_tournament_window,
+                text=f"Nombre de tours: {tournament.round_number}",
+            ).pack()
 
-            tk.Button(self.ended_tournament_window, text="Retour", command=self.ended_tournament_window.destroy).pack()
+            tk.Button(
+                self.ended_tournament_window,
+                text="Retour",
+                command=self.ended_tournament_window.destroy,
+            ).pack()
 
     def ask_for_next_round(self) -> bool:
         """Prompt user if they wish to proceed to the next round."""
@@ -307,7 +369,7 @@ class TournamentView:
                 ("End Date:", tournament.end_date),
                 ("Description:", tournament.description),
                 ("Number of Rounds:", str(tournament.round_number)),
-                ("-"*40, "")  # Ligne de séparation
+                ("-" * 40, ""),  # Ligne de séparation
             ]
 
             for title, value in details_entries:
@@ -333,15 +395,15 @@ class TournamentView:
 
         # Afficher les matchs de chaque round
         for round in tournament.rounds:
-            tk.Label(rounds_window, text=f"{round.name}:", font=("Helvetica", 11, "bold")).pack(anchor='w')
-            
+            tk.Label(rounds_window, text=f"{round.name}:", font=("Helvetica", 11, "bold")).pack(anchor="w")
+
             for match in round.matches:
                 # Récupérer les points totaux pour chaque joueur de tous les rounds précédents
                 total_points_player1 = match.total_points_player1
                 total_points_player2 = match.total_points_player2
                 match_details = f"{match.player1.get_full_name()} ({total_points_player1} points) VS {match.player2.get_full_name()} ({total_points_player2} points)"
-                
-                tk.Label(rounds_window, text=match_details).pack(anchor='w')
+
+                tk.Label(rounds_window, text=match_details).pack(anchor="w")
 
         # Close button to close the rounds and matches window
         tk.Button(rounds_window, text="Close", command=rounds_window.destroy).pack(pady=10)

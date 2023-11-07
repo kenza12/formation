@@ -4,8 +4,7 @@ import os
 
 
 class TournamentManager:
-    """
-    Manages the main functionalities related to tournaments.
+    """Manages the main functionalities related to tournaments.
 
     Attributes:
         controller: The main application controller.
@@ -34,30 +33,29 @@ class TournamentManager:
             print("The tournament is already over.")
             self.controller.menu_manager.tournament_view.display_ended_tournament()
             return
-        
+
         # Starts the tournament if validation checks pass.
         if self.validate_tournament():
             self.initiate_next_round()
 
     def validate_tournament(self) -> bool:
         """Validates if the tournament has correct details."""
+        valid = True  # Assume the tournament is valid to start with
+
         # Check if the tournament exists
         if not self.tournament:
             print("No tournament has been created. Please create one first.")
-            return False
-
+            valid = False
         # Validate player count in the tournament
-        if not self.tournament.is_valid_player_count():
+        elif not self.tournament.is_valid_player_count():
             print("Invalid number of players. Ensure you have an even number of players.")
-            return False
-        
+            valid = False
         # Check for duplicate players
-        if self.tournament.has_duplicate_players():
+        elif self.tournament.has_duplicate_players():
             print("Duplicate players detected. Each player must be unique.")
-            return False
+            valid = False
 
-        # If all checks pass, the tournament is valid
-        return True
+        return valid
 
     def initiate_next_round(self) -> None:
         """Starts a new round in the tournament."""
@@ -137,7 +135,7 @@ class TournamentManager:
         tournaments = []
         tournaments_files = os.listdir("data/tournaments")
         for file_name in tournaments_files:
-            if file_name.endswith('.json'):
+            if file_name.endswith(".json"):
                 tournament = load_state(file_name)
                 if tournament:
                     tournaments.append(tournament)

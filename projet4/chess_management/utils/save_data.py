@@ -3,8 +3,7 @@ import json
 
 
 def save_tournament(tournament):
-    """Sauvegarde le tournoi dans l'état dans le dossier data/tournaments
-       au format JSON.
+    """Sauvegarde le tournoi dans l'état dans le dossier data/tournaments au format JSON.
 
     Args:
         tournament (Object): Tournoi du jeu d'échecs
@@ -23,7 +22,7 @@ def save_tournament(tournament):
 
         file_path = os.path.join(directory, file_name)
 
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             json.dump(tournament.to_dict(), f, ensure_ascii=False, indent=4)
 
         return file_path

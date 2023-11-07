@@ -4,7 +4,7 @@ from models.tournament import Tournament
 
 
 def load_state(file_name):
-    """Cette méthode va charger un fichier JSON du tournoi
+    """Cette méthode va charger un fichier JSON du tournoi.
 
     Args:
         file_name (file): le fichier JSON contenant les informations du

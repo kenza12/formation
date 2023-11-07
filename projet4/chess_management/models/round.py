@@ -3,9 +3,8 @@ from models.match import Match
 
 
 class Round:
-    """
-    Represents a round in a tournament with multiple matches.
-    
+    """Represents a round in a tournament with multiple matches.
+
     Attributes:
         name (str): Name of the round.
         start_time (datetime): Timestamp indicating when the round starts.
@@ -14,8 +13,7 @@ class Round:
     """
 
     def __init__(self, name: str) -> None:
-        """
-        Initializes a Round instance.
+        """Initializes a Round instance.
 
         Args:
             name (str): Name of the round.
@@ -27,21 +25,18 @@ class Round:
         self.matches = []
 
     def __str__(self) -> str:
-        """ 
-        Returns the string representation of the round.
+        """Returns the string representation of the round.
 
         Returns:
             str: String displaying the round's details.
         """
-        start_time_str = self.start_time.strftime('%Y-%m-%d %H:%M:%S') if self.start_time else "N/A"
-        end_time_str = self.end_time.strftime('%Y-%m-%d %H:%M:%S') if self.end_time else "N/A"
+        start_time_str = self.start_time.strftime("%Y-%m-%d %H:%M:%S") if self.start_time else "N/A"
+        end_time_str = self.end_time.strftime("%Y-%m-%d %H:%M:%S") if self.end_time else "N/A"
         return f"Round {self.name} - Matches: {len(self.matches)} - Start Time: {start_time_str} - End Time: {end_time_str}"
-
 
     @property
     def is_finished(self) -> bool:
-        """
-        Checks if all matches in the round have ended.
+        """Checks if all matches in the round have ended.
 
         Returns:
             bool: True if all matches have ended, False otherwise.
@@ -49,22 +44,17 @@ class Round:
         return all(match.is_finished for match in self.matches)
 
     def start_round(self) -> None:
-        """
-        Marks the start time of the round.
-        """
+        """Marks the start time of the round."""
         # Update the start time to the current time
         self.start_time = datetime.now()
 
     def end_round(self) -> None:
-        """
-        Marks the end time of the round.
-        """
+        """Marks the end time of the round."""
         # Update the end time to the current time
         self.end_time = datetime.now()
 
     def add_match(self, match: Match) -> None:
-        """
-        Adds a match to the round.
+        """Adds a match to the round.
 
         Args:
             match (Match): The match to be added.
@@ -72,8 +62,7 @@ class Round:
         self.matches.append(match)
 
     def to_dict(self) -> dict:
-        """
-        Converts the round object to a dictionary.
+        """Converts the round object to a dictionary.
 
         Returns:
             dict: A dictionary representation of the round.
@@ -81,13 +70,12 @@ class Round:
         return {
             "name": self.name,
             "matches": [match.to_dict() for match in self.matches],
-            "is_finished": self.is_finished
+            "is_finished": self.is_finished,
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Round':
-        """
-        Creates a round instance from a dictionary representation.
+    def from_dict(cls, data: dict) -> "Round":
+        """Creates a round instance from a dictionary representation.
 
         Args:
             data (dict): The dictionary containing round data.

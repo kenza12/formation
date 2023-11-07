@@ -4,9 +4,8 @@ from utils import save_data, load_data
 
 
 class ApplicationController:
-    """
-    Manages the main application functionalities such as menu, users, and tournaments.
-    
+    """Manages the main application functionalities such as menu, users, and tournaments.
+
     Attributes:
         root: The main application root or window.
         menu_manager (menu_manager.MenuManager): Manages the application menus.
@@ -15,10 +14,9 @@ class ApplicationController:
         main_menu (main_menu_view.MainMenuView): The main application menu.
     """
 
-    def __init__(self, root):  
-        """
-        Initializes an ApplicationController instance.
-        
+    def __init__(self, root):
+        """Initializes an ApplicationController instance.
+
         Args:
             root: The main application root or window.
         """
@@ -37,8 +35,7 @@ class ApplicationController:
         self.main_menu.run()
 
     def create_tournament(self, **kwargs) -> None:
-        """
-        Creates a new tournament.
+        """Creates a new tournament.
 
         Args:
             **kwargs: Keyword arguments to provide tournament details.
@@ -50,9 +47,8 @@ class ApplicationController:
         save_data.save_tournament(self.tournament_manager.tournament)
 
     def load_tournament(self, file_name: str) -> None:
-        """
-        Loads a tournament's state from a given file.
-        
+        """Loads a tournament's state from a given file.
+
         Args:
             file_name (str): The name/path of the file to load the tournament from.
         """
@@ -62,9 +58,8 @@ class ApplicationController:
             self.tournament_manager.tournament = tournament
 
     def register_player(self, **kwargs) -> None:
-        """
-        Registers a new player to the application.
-        
+        """Registers a new player to the application.
+
         Args:
             **kwargs: Keyword arguments to provide player details.
         """
