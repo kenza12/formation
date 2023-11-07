@@ -163,6 +163,10 @@ class Tournament:
         )
         tournament.current_round = data.get("current_round", 1)
         
+        # Réinitialiser les joueurs et les rondes avant de les remplir avec les données chargées
+        tournament.players = []
+        tournament.rounds = []
+
         # Add players
         for player_data in data.get("players", []):
             player = Player.from_dict(player_data)
@@ -171,6 +175,7 @@ class Tournament:
         # Add rounds and matches
         for round_data in data.get("rounds", []):
             round = Round.from_dict(round_data)
+            round.matches = []  # Réinitialiser les matchs de la ronde avant de les remplir
             for match_data in round_data["matches"]:
                 player1 = tournament.find_player_by_id(match_data["player1"]["chess_id"])
                 player2 = tournament.find_player_by_id(match_data["player2"]["chess_id"])
