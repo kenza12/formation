@@ -331,9 +331,6 @@ class TournamentView:
         rounds_window = tk.Toplevel(self.controller.root)
         rounds_window.title("Active Rounds and Matches")
 
-        # Utiliser un set pour suivre les matchs déjà affichés
-        displayed_matches = set()
-
         # Afficher les matchs de chaque round
         for round in tournament.rounds:
             tk.Label(rounds_window, text=f"{round.name}:", font=("Helvetica", 11, "bold")).pack(anchor='w')
@@ -344,10 +341,7 @@ class TournamentView:
                 total_points_player2 = match.total_points_player2
                 match_details = f"{match.player1.get_full_name()} ({total_points_player1} points) VS {match.player2.get_full_name()} ({total_points_player2} points)"
                 
-                # Vérifier si les détails du match sont déjà affichés pour éviter les doublons
-                if match_details not in displayed_matches:
-                    tk.Label(rounds_window, text=match_details).pack(anchor='w')
-                    displayed_matches.add(match_details)
+                tk.Label(rounds_window, text=match_details).pack(anchor='w')
 
         # Close button to close the rounds and matches window
         tk.Button(rounds_window, text="Close", command=rounds_window.destroy).pack(pady=10)

@@ -25,16 +25,19 @@ class TournamentManager:
         self.tournament = Tournament(**kwargs)
 
     def start_tournament(self) -> None:
-        """Starts the tournament if validation checks pass."""
+        """Starts or resumes a tournament based on its current state."""
+        if not self.tournament:
+            print("No tournament loaded. Please create a tournament first.")
+            return
+
+        if self.tournament.is_ended():
+            print("The tournament is already over.")
+            self.controller.menu_manager.tournament_view.display_ended_tournament()
+            return
+        
+        # Starts the tournament if validation checks pass.
         if self.validate_tournament():
             self.initiate_next_round()
-
-    def start_or_resume_tournament(self) -> None:
-        """Starts or resumes a tournament based on its current state."""
-        if self.tournament and not self.tournament.is_ended():
-            self.resume_tournament()
-        else:
-            self.start_tournament()
 
     def validate_tournament(self) -> bool:
         """Validates if the tournament has correct details."""
@@ -47,7 +50,13 @@ class TournamentManager:
         if not self.tournament.is_valid_player_count():
             print("Invalid number of players. Ensure you have an even number of players.")
             return False
+        
+        # Check for duplicate players
+        if self.tournament.has_duplicate_players():
+            print("Duplicate players detected. Each player must be unique.")
+            return False
 
+        # If all checks pass, the tournament is valid
         return True
 
     def initiate_next_round(self) -> None:
@@ -89,34 +98,34 @@ class TournamentManager:
             else:
                 print("Tournament paused.")
 
-    def resume_tournament(self) -> None:
-        """Resumes a paused or a saved tournament."""
-        if not self.tournament:
-            print("No tournament loaded.")
-            return
-        if self.tournament.is_ended():
-            print("The tournament is already over.")
-            self.controller.menu_manager.tournament_view.display_ended_tournament()
-            return
+    # def resume_tournament(self) -> None:
+    #     """Resumes a paused or a saved tournament."""
+    #     if not self.tournament:
+    #         print("No tournament loaded.")
+    #         return
+    #     if self.tournament.is_ended():
+    #         print("The tournament is already over.")
+    #         self.controller.menu_manager.tournament_view.display_ended_tournament()
+    #         return
 
-        # Si le dernier round enregistré est terminé, vérifiez s'il reste des rounds à jouer.
-        if self.tournament.current_round <= len(self.tournament.rounds):
-            last_round = self.tournament.rounds[self.tournament.current_round - 1]
-            if last_round.is_finished:
-                # Si c'est le cas et qu'il reste des rounds, préparez-vous pour le prochain round.
-                if self.tournament.current_round < self.tournament.round_number:
-                    print("Preparing for the next round. Please start when ready.")
-                    # Ici, ne démarrez pas le round, attendez que l'utilisateur commence le round.
-                else:
-                    # Si tous les rounds sont terminés, le tournoi est terminé.
-                    self.controller.menu_manager.tournament_view.display_ended_tournament()
-            else:
-                # Si le dernier round n'est pas terminé, continuez avec lui.
-                self.update_round_with_view()
-        else:
-            # Si aucun round n'a été joué, commencez par le premier round.
-            print("Starting the first round.")
-            self.initiate_next_round()
+    #     # Si le dernier round enregistré est terminé, vérifiez s'il reste des rounds à jouer.
+    #     if self.tournament.current_round <= len(self.tournament.rounds):
+    #         last_round = self.tournament.rounds[self.tournament.current_round - 1]
+    #         if last_round.is_finished:
+    #             # Si c'est le cas et qu'il reste des rounds, préparez-vous pour le prochain round.
+    #             if self.tournament.current_round < self.tournament.round_number:
+    #                 print("Preparing for the next round. Please start when ready.")
+    #                 # Ici, ne démarrez pas le round, attendez que l'utilisateur commence le round.
+    #             else:
+    #                 # Si tous les rounds sont terminés, le tournoi est terminé.
+    #                 self.controller.menu_manager.tournament_view.display_ended_tournament()
+    #         else:
+    #             # Si le dernier round n'est pas terminé, continuez avec lui.
+    #             self.update_round_with_view()
+    #     else:
+    #         # Si aucun round n'a été joué, commencez par le premier round.
+    #         print("Starting the first round.")
+    #         self.initiate_next_round()
 
     def display_reports_submenu(self) -> None:
         """Displays the reports submenu."""

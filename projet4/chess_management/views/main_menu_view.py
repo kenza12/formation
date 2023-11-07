@@ -18,7 +18,7 @@ class MainMenuView:
         """Initialize the main menu buttons."""
         tk.Button(self.root, text="Player management", command=self.controller.user_manager.display_player_submenu).pack()
         tk.Button(self.root, text="Tournament management", command=self.controller.tournament_manager.display_tournament_submenu).pack()
-        tk.Button(self.root, text="Start a tournament", command=self.controller.tournament_manager.start_or_resume_tournament).pack()
+        tk.Button(self.root, text="Start a tournament", command=self.controller.tournament_manager.start_tournament).pack()
         tk.Button(self.root, text="Save a tournament", command=self.controller.save_tournament).pack()
         tk.Button(self.root, text="Load a tournament", command=self.load_tournament_from_file).pack()
         tk.Button(self.root, text="View reports", command=self.controller.tournament_manager.display_reports_submenu).pack()
