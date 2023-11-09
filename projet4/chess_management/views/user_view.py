@@ -173,7 +173,7 @@ class UserView:
             player_text.config(state=tk.DISABLED)
 
             # Bouton pour fermer la fenêtre
-            close_button = tk.Button(self.list_window, text="Fermer", command=self.list_window.destroy)
+            close_button = tk.Button(self.list_window, text="Quit", command=self.list_window.destroy)
             close_button.pack(pady=10)
 
         except Exception as e:

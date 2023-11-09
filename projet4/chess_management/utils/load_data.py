@@ -25,5 +25,5 @@ def load_state(file_name):
         print("Données chargées avec succès.")
         return tournament
     except FileNotFoundError:
-        print("Le fichier de données n'existe pas. Utilisez 'Sauvegarder le tournoi' pour enregistrer l'état actuel.")
+        print("Le fichier de données n'existe pas. Utilisez 'Save a tournament' pour enregistrer l'état actuel.")
         return None

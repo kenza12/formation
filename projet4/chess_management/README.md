@@ -2,7 +2,7 @@
 
 ## Description
 
-Chess Tournament Manager is a Python application designed to help manage chess tournaments using the Swiss system. It provides a graphical user interface to input player details, pair players, and keep track of scores and rankings.
+The **Chess Tournament Manager** is a Python application that facilitates the organization of chess tournaments through the Swiss system. It offers a user-friendly graphical interface for entering player and tournament information, recording player scores for each round, saving and loading the tournament state for future continuation, and viewing tournament reports.
 
 ## Installation
 
@@ -33,16 +33,21 @@ python3 chess_management.py
 
 Once the application is running, you can:
 
-1. Create a new tournament with Tournament management.
-2. Register players with Player management.
-3. Start a tournament.
-4. Save a tournament at any round.
-5. Load a tournament at any round.
-6. View reports.
+1. Initiate a new tournament under `Tournament management`. Click on `Create New Tournament` and complete the required fields by clicking on `Submit`. You can view the tournament details by clicking on `View Tournament Details`.
+2. Add players under `Player management`. You must first create a tournament in step 1 before registering players. Click `Register a new player` as needed to add all participants, fill in the required fields, and then select `List all players` to see the list of players registered for the current tournament.
+3. After creating a new tournament and registering players or loading a tournament through `Load a tournament`, begin the tournament by selecting `Start a tournament`. Enter the player scores for each Round (1 pt for a win, 0 pt for a loss, 0.5 pt for a draw). The results, along with the updated scores and the start and end times of the round, will be displayed after scoring. You can choose not to proceed to the next Round and save the tournament's current state by clicking on `Save a tournament` to continue later.
+4. As mentioned in step 3, you can save the current state of the tournament by clicking `Save a tournament` at any round you wish. The save files will be stored in the `data/tournaments` directory in JSON format.
+5. Load a saved tournament from `data/tournaments` to continue or to view a particular tournament report by clicking on `Load a tournament` and selecting the relevant file.
+6. Access reports of a loaded tournament or all created tournaments by clicking `View reports`:
+    6.1. `List of all players in all tournaments` displays the roster of players from all previously created tournaments without needing to load them.
+    6.2. `List of players in the active tournament` shows the list of players in the ongoing tournament. Load the tournament or create a new one and register players before using this feature.
+    6.3. `View active tournament details` provides information about the ongoing tournament. Similar to step 6.2, you must load or create the tournament anew before selection.
+    6.4. `View all tournaments details` reveals the details of all previously created tournaments. There is no need to load anything; if tournaments are found in `data/tournaments`, they will be displayed.
+    6.5. `View active rounds and matches` presents all the rounds and matches of the current (or loaded) tournament. Of course, the rounds must have been played to show the results.
 
-The GUI will guide you through each step required to manage the tournament.
+The GUI will guide you through the necessary steps to manage your tournament efficiently.
 
-Note that `Modify Tournament Details` and `Edit a player` buttons are not yet implemented.
+Please note that the `Modify Tournament Details` and `Edit a player` features are not implemented yet.
 
 ## Generating flake8 HTML report
 

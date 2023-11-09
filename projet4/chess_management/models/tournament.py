@@ -263,6 +263,4 @@ class Tournament:
     def has_duplicate_players(self) -> bool:
         """Checks for duplicate player entries based on chess ID, which should be unique."""
         ids = [player.chess_id for player in self.players]
-        print("******IDS****")
-        print(ids)
         return len(ids) != len(set(ids))
