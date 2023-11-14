@@ -41,20 +41,17 @@ class UserManager:
         """
         pass
 
-    def update_player_scores(self, match) -> None:
-        """Updates players' scores after a match."""
-        winner = match.get_winner()
-        if winner:
-            self.controller.tournament_manager.tournament.add_points(winner, 1.0)
-        else:  # In case of a tie
-            self.controller.tournament_manager.tournament.add_points(match.player1, 0.5)
-            self.controller.tournament_manager.tournament.add_points(match.player2, 0.5)
-
     def display_player_list(self) -> None:
         """Displays player lists from the current tournament."""
         self.user_view.display_player_list()
 
     def get_all_players(self):
+        """Retrieves and returns a list of player data from all tournaments in the specified directory.
+
+        Returns:
+        list: A list of dictionaries containing player information with keys 'first_name',
+              'last_name', 'birthdate', and 'chess_id'.
+        """
         players = []
         tournaments_path = "data/tournaments"
         for filename in os.listdir(tournaments_path):
@@ -72,5 +69,5 @@ class UserManager:
         return players
 
     def display_all_player_list(self):
-        """Appelle la méthode de la vue pour afficher tous les joueurs."""
+        """Call the view method to display all players"""
         self.user_view.display_all_player_list()

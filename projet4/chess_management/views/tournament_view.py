@@ -249,48 +249,48 @@ class TournamentView:
         self.round_window.wait_window()
 
     def next_round_cmd(self):
-        """Commande pour le bouton 'Prochain Tour'."""
-        self.result = True  # utilisateur a choisi de passer au prochain tour
+        """Command for the 'Next Round' button."""
+        self.result = True  # User has chosen to proceed to the next round.
         self.round_window.destroy()
         self.round_window = None
 
     def quit_cmd(self):
-        """Commande pour le bouton 'Quitter'."""
-        self.result = False  # utilisateur a choisi de quitter
+        """Command for the 'Quit' button."""
+        self.result = False  # User has chosen to quit.
         self.round_window.destroy()
         self.round_window = None
 
     def display_ended_tournament(self):
         if not self.controller.tournament_manager.tournament:
-            print("Aucun tournoi à afficher!")
+            print("No tournaments to display!")
             return
 
         if self.controller.tournament_manager.tournament.is_ended():
-            messagebox.showinfo("Tournoi", "Le tournoi est terminé!")
+            messagebox.showinfo("Tounament", "The tournament is finished!")
             self.ended_tournament_window = tk.Toplevel(self.controller.root)
-            self.ended_tournament_window.title("Détails du tournoi terminé")
+            self.ended_tournament_window.title("Details of the completed tournament")
 
             tournament = self.controller.tournament_manager.tournament
 
-            tk.Label(self.ended_tournament_window, text=f"Nom: {tournament.name}").pack()
-            tk.Label(self.ended_tournament_window, text=f"Lieu: {tournament.location}").pack()
+            tk.Label(self.ended_tournament_window, text=f"Name: {tournament.name}").pack()
+            tk.Label(self.ended_tournament_window, text=f"Location: {tournament.location}").pack()
             tk.Label(
                 self.ended_tournament_window,
-                text=f"Date de début: {tournament.start_date}",
+                text=f"Start date: {tournament.start_date}",
             ).pack()
-            tk.Label(self.ended_tournament_window, text=f"Date de fin: {tournament.end_date}").pack()
+            tk.Label(self.ended_tournament_window, text=f"End date: {tournament.end_date}").pack()
             tk.Label(
                 self.ended_tournament_window,
                 text=f"Description: {tournament.description}",
             ).pack()
             tk.Label(
                 self.ended_tournament_window,
-                text=f"Nombre de tours: {tournament.round_number}",
+                text=f"Round Number: {tournament.round_number}",
             ).pack()
 
             tk.Button(
                 self.ended_tournament_window,
-                text="Retour",
+                text="Return",
                 command=self.ended_tournament_window.destroy,
             ).pack()
 

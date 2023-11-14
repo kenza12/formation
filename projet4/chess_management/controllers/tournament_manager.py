@@ -96,42 +96,13 @@ class TournamentManager:
             else:
                 print("Tournament paused.")
 
-    # def resume_tournament(self) -> None:
-    #     """Resumes a paused or a saved tournament."""
-    #     if not self.tournament:
-    #         print("No tournament loaded.")
-    #         return
-    #     if self.tournament.is_ended():
-    #         print("The tournament is already over.")
-    #         self.controller.menu_manager.tournament_view.display_ended_tournament()
-    #         return
-
-    #     # Si le dernier round enregistré est terminé, vérifiez s'il reste des rounds à jouer.
-    #     if self.tournament.current_round <= len(self.tournament.rounds):
-    #         last_round = self.tournament.rounds[self.tournament.current_round - 1]
-    #         if last_round.is_finished:
-    #             # Si c'est le cas et qu'il reste des rounds, préparez-vous pour le prochain round.
-    #             if self.tournament.current_round < self.tournament.round_number:
-    #                 print("Preparing for the next round. Please start when ready.")
-    #                 # Ici, ne démarrez pas le round, attendez que l'utilisateur commence le round.
-    #             else:
-    #                 # Si tous les rounds sont terminés, le tournoi est terminé.
-    #                 self.controller.menu_manager.tournament_view.display_ended_tournament()
-    #         else:
-    #             # Si le dernier round n'est pas terminé, continuez avec lui.
-    #             self.update_round_with_view()
-    #     else:
-    #         # Si aucun round n'a été joué, commencez par le premier round.
-    #         print("Starting the first round.")
-    #         self.initiate_next_round()
-
     def display_reports_submenu(self) -> None:
         """Displays the reports submenu."""
         self.controller.menu_manager.tournament_view.display_reports_submenu()
 
     def display_all_tournaments(self) -> None:
         """Fetch and display details of all tournaments in a single window."""
-        # Récupérer tous les tournois
+        # Retrieve all tournaments
         tournaments = []
         tournaments_files = os.listdir("data/tournaments")
         for file_name in tournaments_files:
@@ -142,7 +113,7 @@ class TournamentManager:
                 else:
                     print(f"Failed to load tournament from {file_name}")
 
-        # Afficher tous les tournois si la liste n'est pas vide
+        # Display all tournaments if the list is not empty
         if tournaments:
             self.controller.menu_manager.tournament_view.display_all_tournament_details(tournaments)
         else:

@@ -16,8 +16,8 @@ class Match:
         Args:
             player1 (Player): The first player in the match.
             player2 (Player): The second player in the match.
-            score1 (float, optional): The score of the first player. None if not yet set.
-            score2 (float, optional): The score of the second player. None if not yet set.
+            score1 (float, optional): The score of the first player.
+            score2 (float, optional): The score of the second player.
         """
         self.player1 = player1
         self.player2 = player2
